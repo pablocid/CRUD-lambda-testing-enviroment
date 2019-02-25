@@ -1,0 +1,354 @@
+{
+    "_id": "5c37f25159be0156682e4271",
+    "schema": "temporada",
+    "attributes": [
+        {
+            "id": "worksheets",
+            "list": [
+                "variedades",
+                "temporada",
+                "poda",
+                "raleo",
+                "floribundidad",
+                "fenologia",
+                "cosecha",
+                "cosecha_defectos",
+                "cosecha_presiones",
+                "cosecha_calibre",
+                "cosecha_diametro",
+                "postcosecha",
+                "postcosecha_presiones",
+                "postcosecha_defectos"
+            ]
+        },
+        {
+            "id": "main_pic",
+            "string": "https://s3.amazonaws.com/ana-photos/9f8e94c4-1d9f-4420-863c-327dca8dc513.png"
+        },
+        {
+            "id": "especie",
+            "string": "Nectarines"
+        },
+        {
+            "id": "temporada",
+            "string": "2018-2019"
+        },
+        {
+            "id": "season",
+            "number": 2018
+        },
+        {
+            "id": "sheetUrl",
+            "string": "https://docs.google.com/spreadsheets/d/1cAwC7xcPBR6MpWKqv17qCdtB4PFA1P5p28oiDyZDeW8/edit#gid=250941663"
+        },
+        {
+            "id": "headers",
+            "value": {
+                "variedades": [
+                    "id",
+                    "resolucion_ingreso",
+                    "especie",
+                    "color_pulpa",
+                    "proveedor",
+                    "estatus_obtentor",
+                    "variedad",
+                    "denominacion_varietal",
+                    "marca_asociada",
+                    "internado_por",
+                    "codigo_variedad_maestro",
+                    "codigo_interno",
+                    "ingreso_pais",
+                    "codigo_origen",
+                    "clave_color1",
+                    "clave_color2",
+                    "clave_color3",
+                    "estatus_comercial"
+                ],
+                "temporada": [
+                    "id",
+                    "plantel",
+                    "temporada",
+                    "estatus_evaluativo",
+                    "numero_plantas",
+                    "fecha_plantacion",
+                    "portainjerto"
+                ],
+                "poda": [
+                    "id",
+                    "plantel",
+                    "fecha",
+                    "formacion_arbol",
+                    "n_arbol",
+                    "valor"
+                ],
+                "raleo": [
+                    "id",
+                    "plantel",
+                    "fecha",
+                    "formacion_arbol",
+                    "n_arbol",
+                    "valor"
+                ],
+                "floribundidad": [
+                    "id",
+                    "plantel",
+                    "fecha",
+                    "labor",
+                    "valor"
+                ],
+                "fenologia": [
+                    "id",
+                    "plantel",
+                    "yema_hinchada",
+                    "boton",
+                    "inicio_flor",
+                    "plenta_flor",
+                    "fruto_cuajado",
+                    "observacion"
+                ],
+                "cosecha": [
+                    "id",
+                    "plantel",
+                    "especie",
+                    "fecha_cosecha",
+                    "muestra",
+                    "sobre_color",
+                    "color_cubrimiento",
+                    "color_fondo",
+                    "forma_fruto",
+                    "simetria",
+                    "vellosidad",
+                    "tipo_pulpa",
+                    "color_pulpa",
+                    "madurez_pulpa",
+                    "adherencia_carozo",
+                    "sabor",
+                    "observacion_sabor",
+                    "gasto_naoh",
+                    "acidez",
+                    "temperatura_entrada",
+                    "temperatura_salida",
+                    "observaciones"
+                ],
+                "cosecha_defectos": [
+                    "id",
+                    "plantel",
+                    "fecha_cosecha",
+                    "defecto",
+                    "nivel",
+                    "n_frutos"
+                ],
+                "cosecha_presiones": [
+                    "id",
+                    "plantel",
+                    "fecha_cosecha",
+                    "ecuatorial1",
+                    "ecuatorial2",
+                    "hombro",
+                    "sutura",
+                    "punta",
+                    "brix",
+                    "peso"
+                ],
+                "cosecha_calibre": [
+                    "id",
+                    "plantel",
+                    "fecha_cosecha",
+                    "peso"
+                ],
+                "cosecha_diametro": [
+                    "id",
+                    "plantel",
+                    "fecha_cosecha",
+                    "diametro1",
+                    "diametro2",
+                    "peso"
+                ],
+                "postcosecha": [
+                    "id",
+                    "plantel",
+                    "especie",
+                    "fecha_cosecha",
+                    "salida_frio",
+                    "fecha_evaluacion",
+                    "n_muestra",
+                    "sabor",
+                    "pulpa",
+                    "gasto_naoh",
+                    "acidez",
+                    "observaciones"
+                ],
+                "postcosecha_presiones": [
+                    "id",
+                    "plantel",
+                    "fecha_cosecha",
+                    "salida_frio",
+                    "ecuatorial1",
+                    "ecuatorial2",
+                    "hombro",
+                    "sutura",
+                    "punta",
+                    "brix",
+                    "peso"
+                ],
+                "postcosecha_defectos": [
+                    "id",
+                    "plantel",
+                    "fecha_cosecha",
+                    "salida_frio",
+                    "defecto",
+                    "nivel",
+                    "n_frutos"
+                ]
+            },
+            "list": "Error: action `getColumnHeadersToJSON` doesnt exist"
+        },
+        {
+            "id": "categories",
+            "value": {
+                "especie": [
+                    "Duraznero",
+                    "Nectarino",
+                    "Paraguayo",
+                    "Platerina",
+                    "Damasco"
+                ],
+                "formacion_arbol": [
+                    "vaso",
+                    "eje"
+                ],
+                "color_pulpa": [
+                    "amarilla",
+                    "blanca",
+                    "sangría"
+                ],
+                "programa": [
+                    "ASF/MAILLARD"
+                ],
+                "estatus_obtentor": [
+                    "aceptada",
+                    "descartada"
+                ],
+                "internado_por": [
+                    "ANA",
+                    "UV"
+                ],
+                "codigo_variedad_maestro": [
+                    "NE",
+                    "DZ"
+                ],
+                "plantel": [
+                    "ANA1",
+                    "ANA2",
+                    "SK1",
+                    "SK2",
+                    "SK3",
+                    "SK4",
+                    "SMC"
+                ],
+                "estatus_evaluativo": [
+                    "primera fruta",
+                    "primera evaluación",
+                    "segunda evaluación",
+                    "tercera evaluación",
+                    "cuarta evaluación"
+                ],
+                "estatus_comercial": [
+                    "formación",
+                    "en evaluación",
+                    "descartado",
+                    "comercial"
+                ],
+                "portainjectos": [
+                    "Nemaguard"
+                ],
+                "labor": [
+                    "yemas totales",
+                    "yemas florales",
+                    "frutos cuajados",
+                    "largo ramilla"
+                ],
+                "defectos cosecha": [
+                    "carozo partido abierto",
+                    "presencia de quilla",
+                    "presencia de punta",
+                    "russet",
+                    "grietas",
+                    "caspocidad",
+                    "golpe de sol",
+                    "rugosidad de la piel",
+                    "desgarro peduncular",
+                    "carozo partido cerrado",
+                    "inking"
+                ],
+                "defectos postcosecha": [
+                    "harinosidad",
+                    "pardeamiento",
+                    "pulpa traslúcida",
+                    "coloración rogiza",
+                    "deshidratación",
+                    "pudrición",
+                    "inking"
+                ],
+                "nivel": [
+                    "leve",
+                    "moderado",
+                    "severo"
+                ],
+                "simetria": [
+                    "simetrico",
+                    "asimetrico"
+                ],
+                "vellosidad": [
+                    "alta",
+                    "media",
+                    "baja",
+                    "nectarin"
+                ],
+                "sobre_color": [
+                    "rojo",
+                    "rojo púrpura",
+                    "naranjo"
+                ],
+                "color_fondo": [
+                    "verde",
+                    "verde amarillo",
+                    "amarillo",
+                    "crema"
+                ],
+                "forma_fruto": [
+                    "redondo",
+                    "ovalado",
+                    "achatado"
+                ],
+                "tipo_pulpa": [
+                    "crocante",
+                    "no crocante"
+                ],
+                "madurez_pulpa": [
+                    "exterior-interior",
+                    "interior-exterior"
+                ],
+                "adherencia_carozo": [
+                    "semi-prisco",
+                    "prisco",
+                    "pavía"
+                ],
+                "sabor": [
+                    "excelente",
+                    "bueno",
+                    "regular",
+                    "malo"
+                ],
+                "pulpa": [
+                    "fundente",
+                    "no fundente"
+                ],
+                "temporada": [
+                    "2018-2019"
+                ]
+            }
+        }
+    ],
+    "updated": "2019-01-10T23:36:55.632Z"
+}
