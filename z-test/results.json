@@ -1,0 +1,44 @@
+[
+    {
+        "name": "resetting the entity record"
+    },
+    {
+        "name": "resetting the entity schema"
+    },
+    {
+        "name": "resetting the \"color_racimo\" attribute schema"
+    },
+    {
+        "name": "color create",
+        "error": "Error: the attribute is not part of the entity schema",
+        "message": "Method: static async build, stage: checking if the attribute is part of the schema",
+        "from": "UpdateAttribute.build"
+    },
+    {
+        "name": "pushing color attributes in schema"
+    },
+    {
+        "name": "color create",
+        "error": "The undefined data type doesn't exist.",
+        "message": "Method: constructor, stage: checking allow data type",
+        "from": "UpdateAttribute.build"
+    },
+    {
+        "name": "setting datatype in \"color_racimo\" attribute schema"
+    },
+    {
+        "name": "color create",
+        "error": "The form type doesn' exist",
+        "message": "Method: constructor, stage: checking the formtype",
+        "from": "UpdateAttribute.build"
+    },
+    {
+        "name": "setting formtype in \"color_racimo\" attribute schema"
+    },
+    {
+        "name": "color create",
+        "error": "The attribute 585185360cb9af0011197935 don't have the option's variable or is not an array",
+        "message": "Method: attributeSelectEntity(), stage: checking if the value is an available option ",
+        "from": "updater.make"
+    }
+]

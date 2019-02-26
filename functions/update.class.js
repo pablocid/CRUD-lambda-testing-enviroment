@@ -2,73 +2,85 @@ const { ObjectId } = require('bson');
 
 class UpdateAttribute {
     static OIDChecker(string) { return /^[0-9a-fA-F]{24}$/.test(string); }
+    static findById(db, collection, id) {
+        return db.collection(collection).find({ _id: new ObjectId(id) }).first();
+    }
+    static findAssessmentRecord(db, idEntity, assessSchmId) {
+        return db.collection('records').find({ schm: new ObjectId(assessSchmId), reference: ObjectId(idEntity) }).first();
+    }
     static async build(event, db) {
-        const { id, assessSchmId, attrId, value, options, userId } = event;
+        const { entityId, assessSchmId, attrId, value, options, userId } = event;
         // check if doesnt options exist
         if (!options) { options = {}; }
 
         // checking obligatory parameters format
-        if (!UpdateAttribute.OIDChecker(id) || !UpdateAttribute.OIDChecker(attrId)) { throw new Error(" Error: idRef or attrId is not a hex string"); }
+        if (!UpdateAttribute.OIDChecker(entityId) || !UpdateAttribute.OIDChecker(attrId)) { throw { error: "idRef or attrId is not a hex string", message: 'Method: static async build, stage: checking obligatory parameters format' }; }
 
         // checking obligatory parameters format
-        if (!UpdateAttribute.OIDChecker(userId)) { throw new Error(" Error: userId is not a hex string"); }
+        if (!UpdateAttribute.OIDChecker(userId)) { throw { error: 'UserId is not a hex string', message: 'Method: static async build, stage: checking obligatory parameters format' }; }
 
         // checking assessSchmId  parameter format
-        if (!options.entity && !UpdateAttribute.OIDChecker(assessSchmId)) { throw new Error(" Error: assessSchmId is not a hex string"); }
+        if (!options.entity && !UpdateAttribute.OIDChecker(assessSchmId)) { throw { error: "Error: assessSchmId is not a hex string", message: 'Method: static async build, stage: checking obligatory parameters format' }; }
 
         const promises = [
-            db.collection('users').find({ _id: new ObjectId(userId) }).first(), //userInfo
-            db.collection('records').find({ _id: new ObjectId(id) }).first(), // entity
-            db.collection('schemas').find({ _id: new ObjectId(assessSchmId) }).first(), // assessment schema
-            db.collection('schemas').find({ _id: new ObjectId(attrId) }).first(), // attribute schema
+            UpdateAttribute.findById(db, 'users', userId),
+            UpdateAttribute.findById(db, 'records', entityId),
+            UpdateAttribute.findById(db, 'schemas', attrId),
         ];
+        if (!options.entity) {
+            // assessment schema
+            promises.push(UpdateAttribute.findById(db, 'schemas', assessSchmId));
+        }
 
-        let userRecord, entityRecord, entitySchema, assessmentRecord, assessmentSchema, attributeSchema;
+        let userRecord, entityRecord, entitySchema, assessmentRecord, attributeSchema, assessmentSchema;
 
+        // make async calling to database
         try {
-            [userRecord, entityRecord, assessmentSchema, attributeSchema] = await Promise.all(promises);
+            [userRecord, entityRecord, attributeSchema, assessmentSchema] = await Promise.all(promises);
         } catch (error) {
-            throw new Error(error);
+            throw { error: 'Problem obtaining user, record or schema from database.', message: 'Method: static async build, stage: make async calling to database' };
         }
 
         // checking user & role (user | admin)
         const role = ['guess', 'practitioner', 'user', 'admin'];
         if (!userRecord) { throw new Error('Error: User doesn\' exist'); }
-        if (role.indexOf(userRecord.role) <= 0) { console.log(userRecord); throw new Error('Error: this user role is not allow for updating the database'); }
+        if (role.indexOf(userRecord.role) <= 0) { console.log(userRecord); throw { error: 'Error: this user role is not allow for updating the database', message: 'Method: static async build, stage: checking user & role (user | admin)' }; }
 
         // checking entityRecord
-        if (!entityRecord || !Array.isArray(entityRecord.attributes)) { throw new Error('Error: the entity doesnt exist or do not have attributes'); }
+        if (!entityRecord || !Array.isArray(entityRecord.attributes)) { throw { error: 'Error: the entity doesnt exist or do not have attributes', message: 'Method: static async build, stage: checking entityRecord' }; }
 
         // checking attributeSchema
-        if (!attributeSchema || !Array.isArray(attributeSchema.attributes)) { throw new Error('Error: the entity doesnt exist or do not have attributes'); }
+        if (!attributeSchema || !Array.isArray(attributeSchema.attributes)) { throw { error: 'Error: the entity doesnt exist or do not have attributes', message: 'Method: static async build, stage: checking attributeSchema' }; }
 
         // checking assessmentSchema
-        if (!options.entity && !assessmentSchema || !Array.isArray(assessmentSchema.attributes)) { throw new Error('Error: the assessment schema doesnt exist or do not have attributes'); }
+        if (!options.entity && (!assessmentSchema || !Array.isArray(assessmentSchema.attributes))) { throw { error: 'Error: the assessment schema doesnt exist or do not have attributes', message: 'Method: static async build, stage: checking assessmentSchema' }; }
 
+        // getting entity schema
         try {
-            entitySchema = await db.collection('schemas').find({ _id: new ObjectId(entityRecord.schm) }).first();
-        } catch (error) { throw new Error(error); }
+            entitySchema = await UpdateAttribute.findById(db, 'schemas', entityRecord.schm);
+        } catch (error) { throw { error: 'Problem gettring entity schema', message: 'Method: static async build, stage: getting entity schema' } }
 
         // set and checking assessment record
         if (!options.entity) {
             try {
-                assessmentRecord = await db.collection('records').find({ schm: new ObjectId(assessSchmId), reference: ObjectId(id) }).first();
-            } catch (error) { throw new Error(error); }
+                assessmentRecord = await UpdateAttribute.findAssessmentRecord(db, entityId, assessSchmId);
+            } catch (error) {
+                throw { error: 'Problem gettring assessment record', message: 'Method: static async build, stage: set and checking assessment record' }
+            }
         }
 
         // checking if the attribute is part of the schema
         if (options.entity) {
-            if (!entitySchema || !Array.isArray(entitySchema.attributes)) { throw new Error('Error: the entity schema doesnt exist or do not have attributes'); }
+            if (!entitySchema || !Array.isArray(entitySchema.attributes)) { throw { error: 'Error: the entity schema doesnt exist or do not have attributes', message: 'Method: static async build, stage: checking if the attribute is part of the schema' }; }
             const attrs = entitySchema.attributes.find(x => x.id === 'attributes');
-            if (!attrs || !Array.isArray(attrs.list) || attrs.list.indexOf(attrId) === -1) { throw new Error('Error: the attribute is not part of the entity schema'); }
+            if (!attrs || !Array.isArray(attrs.value) || attrs.value.indexOf(attrId) === -1) { throw { error: 'Error: the attribute is not part of the entity schema', message: 'Method: static async build, stage: checking if the attribute is part of the schema' }; }
         } else {
             const attrs = assessmentSchema.attributes.find(x => x.id === 'attributes');
-            if (!attrs || !Array.isArray(attrs.list) || attrs.list.indexOf(attrId) === -1) { throw new Error('Error: the attribute is not part of the assessment schema'); }
+            if (!attrs || !Array.isArray(attrs.value) || attrs.value.indexOf(attrId) === -1) { throw { error: 'Error: the attribute is not part of the assessment schema', message: 'Method: static async build, stage: checking if the attribute is part of the schema' }; }
         }
 
         return new UpdateAttribute(userRecord, entityRecord, entitySchema, assessmentRecord, assessmentSchema, attributeSchema, value, options, db);
     }
-
     constructor(userRecord, entityRecord, entitySchema, assessmentRecord, assessmentSchema, attributeSchema, value, options, db) {
         this.userRecord = userRecord;
         this.entityRecord = entityRecord;
@@ -81,91 +93,53 @@ class UpdateAttribute {
         this.entity = options.entity ? true : false;
         this.db = db;
         this.allowDataTypes = ['reference', 'string', 'number', 'boolean', 'date', 'list', 'listOfObj', 'value'];
-        this.datatype = this.getAttr(this.attributeSchema.attributes, 'datatype', 'string');
-        if (this.allowDataTypes.indexOf(this.datatype) === -1) { throw new Error(`The ${this.datatype} data type doesn't exist.`); }
+        this.datatype = this.getAttr(this.attributeSchema.attributes, 'datatype', 'value');
+        // checking allow data type
+        if (this.allowDataTypes.indexOf(this.datatype) === -1) { throw { error: `The ${this.datatype} data type doesn't exist.`, message: 'Method: constructor, stage: checking allow data type' } }
 
         // checking the data type
-        if (this.datatype === 'number' && isNaN(this.value)) { throw new Error(`value is not a number`); }
-        if (this.datatype === 'string' && typeof this.value !== 'string') { throw new Error(`value is not a string`); }
-        if (this.datatype === 'boolean' && typeof (this.value) !== 'boolean') { throw new Error(`value is not a boolean`); }
-        if (this.datatype === 'date' && Object.prototype.toString.call(this.value) !== "[object Date]") { throw new Error(`value is not a date`); }
+        if (this.datatype === 'number' && isNaN(this.value)) { throw { error: `value is not a number`, message: 'Method: constructor, stage: checking the data type' }; }
+        if (this.datatype === 'string' && typeof this.value !== 'string') { throw { error: `value is not a string`, message: 'Method: constructor, stage: checking the data type' }; }
+        if (this.datatype === 'boolean' && typeof (this.value) !== 'boolean') { throw { error: `value is not a boolean`, message: 'Method: constructor, stage: checking the data type' }; }
+        if (this.datatype === 'date' && Object.prototype.toString.call(this.value) !== "[object Date]") { throw { error: `value is not a date`, message: 'Method: constructor, stage: checking the data type' }; }
         // TODO: make a check for datatype list ( array of strings)
-        if (this.datatype === 'list' && !Array.isArray(this.value)) { throw new Error(`value is not a array`); }
+        if (this.datatype === 'list' && !Array.isArray(this.value)) { throw { error: `value is not a array`, message: 'Method: constructor, stage: checking the data type' }; }
         // TODO: implement data type array (array of numbers)
 
         // checking the formtype
         this.formtypes = ['select', 'select-img', 'number-range'];
-        this.formtype = this.getAttr(this.attributeSchema.attributes, 'formtype', 'string');
-        if (this.formtypes.indexOf(this.formtype) === -1) { throw new Error('The form type doesn\' exist'); }
+        this.formtype = this.getAttr(this.attributeSchema.attributes, 'formtype', 'value');
+        if (this.formtypes.indexOf(this.formtype) === -1) { throw { error: 'The form type doesn\' exist', message: 'Method: constructor, stage: checking the formtype' }; }
+    }
+    updateRecord(query, updateSetting, options) {
+        return this.db.collection('records').updateOne(query, updateSetting, options);
     }
     make() {
         if (this.entity) { return this.updateEntity(); }
         else { return this.updateAssessment(); }
     }
+    /******** EDIT ENTITY *********/
     updateEntity() {
         // console.log('updateEntity');
-        if (this.datatype === 'string') { return this.attributeStringEntity(); }
-        if (this.datatype === 'number') { return this.attributeNumberEntity(); }
-        throw new Error(`There is no function for handling entity update for the data type: ${this.datatype}.`);
-    }
-    updateAssessment() {
-        throw new Error(`There is no function for handling assessment update for this data type ${this.datatype}.`);
-    }
-    attributeNumberEntity() {
-        if (this.formtype === 'number-range') { return this.attrNumberRangeEntity(); }
-        throw new Error(`There is no function for handling entity update for this form type ${this.formtype}.`);
-    }
-
-    async attrNumberRangeEntity() {
-        let min, max;
-        try {
-            min = this.attributeSchema.attributes.find(x => x.id === 'minimum')['number'];
-            max = this.attributeSchema.attributes.find(x => x.id === 'maximum')['number'];
-        } catch (error) {
-            throw new Error(`Can't set min or max from ${this.attributeSchema._id.toString()} schema`);
+        if (this.datatype === 'string') {
+            if (this.formtype === 'select' || this.formtype === 'select-img') { return this.attributeSelectEntity(); }
+            if (this.formtype === 'textarea') { return this.attributeSelectEntity(); }
+            console.log(new Error(`There is no function for handling entity update for this form type ${this.formtype}.`));
+            throw { error: `There is no function for handling entity update for this form type ${this.formtype}.` };
+        }
+        if (this.datatype === 'number') {
+            if (this.formtype === 'number-range') { return this.attrNumberRangeEntity(); }
+            console.log(new Error(`There is no function for handling entity update for this form type ${this.formtype}.`));
+            throw { error: `There is no function for handling entity update for this form type ${this.formtype}.` };
         }
 
-        // on delete
-        if (this.options.delete) { return this.deleteAttributeEntity(); }
-
-        // validate range min-max
-        if (this.value < min || this.value > max) { throw new Error(`The value ${this.value} is out of range (${min}-${max})`); }
-
-        // create or modify
-        const index = this.entityRecord.attributes.map(x => x.id).indexOf(this.attributeSchema._id.toString());
-        if (index === -1) { return this.createAttributeEntity(); }
-        else { return this.modifyAttributeEntity(index); }
+        console.log(new Error(`There is no function for handling entity update for the data type: ${this.datatype}.`));
+        throw { error: `There is no function for handling entity update for the data type: ${this.datatype}.` };
     }
-
-    deleteAttributeEntity() {
-        const index = this.entityRecord.attributes.map(x => x.id).indexOf(this.attributeSchema._id.toString());
-        const query = { _id: this.entityRecord._id };
-
-        if (index === -1) { return { message: "el atributo no se puede eliminar porque no existe" }; }
-        else {
-            const key = `attributes.${index}.${this.datatype}`;
-            const up = `attributes.${index}.updates`;
-            const updateData = { user: this.userRecord._id.toString(), date: new Date(), value: null, action: 'delete' };
-            const updateObject = {
-                $set: {
-                    [key]: null, updated: new Date()
-                }
-            };
-            if (
-                this.entityRecord.attributes[index].updates &&
-                Array.isArray(this.entityRecord.attributes[index].updates)
-            ) {
-                updateObject['$push'] = { [up]: updateData };
-            } else {
-                updateObject.$set[up] = [updateData];
-            }
-
-            return this.db.collection('records').updateOne(query, updateObject);
-        }
-    }
+    // ENTITY CRUD
     createAttributeEntity() {
         const query = { _id: this.entityRecord._id };
-        return this.db.collection('records').updateOne(query, {
+        return this.updateRecord(query, {
             $set: { updated: new Date() },
             $push: {
                 attributes: {
@@ -197,88 +171,86 @@ class UpdateAttribute {
         } else {
             updateObject.$set[up] = [updateData];
         }
-        return this.db.collection('records').updateOne(query, updateObject);
+        return this.updateRecord(query, updateObject);
     }
-
-    attributeStringEntity() {
-        // console.log('attributeStringEntity');
-        if (this.formtype === 'select' || this.formtype === 'select-img') { return this.attributeSelectEntity(); }
-        throw new Error(`There is no function for handling entity update for this form type ${this.formtype}.`);
-    }
-    async attributeSelectEntity() {
-        // console.log('attributeSelectEntity');
+    removeAttributeEntity() {
         const index = this.entityRecord.attributes.map(x => x.id).indexOf(this.attributeSchema._id.toString());
         const query = { _id: this.entityRecord._id };
 
-        // on delete
-        if (this.options.delete) {
-            if (index === -1) { return { message: "el atributo no se puede eliminar porque no existe" }; }
-            else {
-                const key = `attributes.${index}.${this.datatype}`;
-                const up = `attributes.${index}.updates`;
-                const updateData = { user: this.userRecord._id.toString(), date: new Date(), value: null, action: 'delete' };
-                const updateObject = {
-                    $set: {
-                        [key]: null, updated: new Date()
-                    }
-                };
-                if (
-                    this.entityRecord.attributes[index].updates &&
-                    Array.isArray(this.entityRecord.attributes[index].updates)
-                ) {
-                    updateObject['$push'] = { [up]: updateData };
-                } else {
-                    updateObject.$set[up] = [updateData];
-                }
-
-                try {
-                    return this.db.collection('records').updateOne(query, updateObject);
-                    // return 'OK'
-                } catch (error) {
-                    console.log('Error en updateONE');
-                    throw new Error('Errorsss');
-                }
-            }
-        }
-
-        // checking if the value is an available option
-        const options = this.getAttr(this.attributeSchema.attributes, 'options', 'listOfObj');
-        if (!Array.isArray(options) || options.map(x => x.id).indexOf(this.value) === -1) { throw new Error(`The attribute ${this.attributeSchema._id.toString()} don't have the option "${this.value}" in the list. Options available ${JSON.stringify(options.map(x => x.id))}`); }
-
-        // on create
-        if (index === -1) {
-            return this.db.collection('records').updateOne(query, {
-                $set: { updated: new Date() },
-                $push: {
-                    attributes: {
-                        id: this.attributeSchema._id.toString(),
-                        [this.datatype]: this.value,
-                        updates: [{ user: this.userRecord._id.toString(), date: new Date(), value: this.value, action: 'create' }]
-                    },
-                }
-            });
-        } else {
-            // on modify
-            if (this.entityRecord.attributes[index][this.datatype] === this.value) { return { message: 'There is no modification' }; }
-            const key2 = `attributes.${index}.${this.datatype}`;
-            const up2 = `attributes.${index}.updates`;
-            const updateData2 = { user: this.userRecord._id.toString(), date: new Date(), value: this.value, action: 'modify' };
-            const updateObject2 = {
+        if (index === -1) { return { message: "el atributo no se puede eliminar porque no existe" }; }
+        else {
+            const key = `attributes.${index}.${this.datatype}`;
+            const up = `attributes.${index}.updates`;
+            const updateData = { user: this.userRecord._id.toString(), date: new Date(), value: null, action: 'remove' };
+            const updateObject = {
                 $set: {
-                    [key2]: this.value, updated: new Date()
+                    [key]: null, updated: new Date()
                 }
             };
             if (
                 this.entityRecord.attributes[index].updates &&
                 Array.isArray(this.entityRecord.attributes[index].updates)
             ) {
-                updateObject2['$push'] = { [up2]: updateData2 };
+                updateObject['$push'] = { [up]: updateData };
             } else {
-                updateObject2.$set[up2] = [updateData2];
+                updateObject.$set[up] = [updateData];
             }
-            return this.db.collection('records').updateOne(query, updateObject2);
+            return this.updateRecord(query, updateObject);
         }
-        console.log('log', this.entityRecord.attributes[index]);
+    }
+    // END ENTITY CRUD
+
+    attributeSelectEntity() {
+        // on remove
+        if (this.options.remove) { return this.removeAttributeEntity(); }
+
+        // checking if the value is an available option
+        const options = this.getAttr(this.attributeSchema.attributes, 'options', 'listOfObj');
+        if (!Array.isArray(options)) { throw { error: `The attribute ${this.attributeSchema._id.toString()} don't have the option's variable or is not an array`, message: `Method: attributeSelectEntity(), stage: checking if the value is an available option ` }; }
+        if (options.map(x => x.id).indexOf(this.value) === -1) {
+            console.log('options is not an array')
+            throw { error: `The attribute ${this.attributeSchema._id.toString()} don't have the option "${this.value}" in the list. Options available ${JSON.stringify(options.map(x => x.id))}`, message: `Method: attributeSelectEntity(), stage: checking if the value is an available option ` };
+        }
+        // on create
+        const index = this.entityRecord.attributes.map(x => x.id).indexOf(this.attributeSchema._id.toString());
+        if (index === -1) { return this.createAttributeEntity(); }
+        // on modify
+        else { return this.modifyAttributeEntity(index); }
+    }
+    attrNumberRangeEntity() {
+        // checking if min max range is set
+        let min, max;
+        try {
+            min = this.attributeSchema.attributes.find(x => x.id === 'minimum')['number'];
+            max = this.attributeSchema.attributes.find(x => x.id === 'maximum')['number'];
+        } catch (error) {
+            throw { error: `Can't set min or max from ${this.attributeSchema._id.toString()} schema`, message: `Method: attrNumberRangeEntity, stage: checking if min max range is set` }
+        }
+
+        // on remove
+        if (this.options.remove) { return this.removeAttributeEntity(); }
+
+        // validate range min-max
+        if (this.value < min || this.value > max) {
+            throw { error: `The value ${this.value} is out of range (${min}-${max})`, message: `Method: attrNumberRangeEntity, stage: validate range min-max` };
+        }
+
+        // create or modify
+        const index = this.entityRecord.attributes.map(x => x.id).indexOf(this.attributeSchema._id.toString());
+        if (index === -1) { return this.createAttributeEntity(); }
+        else { return this.modifyAttributeEntity(index); }
+    }
+    attrTextareaEntity() {
+        // on remove
+        if (this.options.remove) { return this.removeAttributeEntity(); }
+        // create or modify
+        const index = this.entityRecord.attributes.map(x => x.id).indexOf(this.attributeSchema._id.toString());
+        if (index === -1) { return this.createAttributeEntity(); }
+        else { return this.modifyAttributeEntity(index); }
+    }
+    /******** EDIT ASSESSMENT *********/
+    updateAssessment() {
+        throw new Error(`There is no function for handling assessment update for this data type ${this.datatype}.`);
     }
     getAttr(attrs, id, dd) {
         try { return attrs.find(x => x.id === id)[dd]; }

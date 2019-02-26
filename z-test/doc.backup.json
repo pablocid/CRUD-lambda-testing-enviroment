@@ -1,0 +1,231 @@
+{
+    "_id": "57a8d8deef44961377521c86",
+    "schm": "57a4e02ec830e2bdff1a1608",
+    "created": "2016-08-06T22:04:12.762Z",
+    "updated": "2019-02-26T14:07:42.158Z",
+    "attributes": [
+        {
+            "id": "585185360cb9af0011197935",
+            "string": "black",
+            "updates": [
+                {
+                    "user": "5c6db0b4d37f300d1fed14ea",
+                    "date": "2019-02-26T14:07:20.548Z",
+                    "value": "green",
+                    "action": "create"
+                },
+                {
+                    "user": "5c6db0b4d37f300d1fed14ea",
+                    "date": "2019-02-26T14:07:22.319Z",
+                    "value": "red",
+                    "action": "modify"
+                },
+                {
+                    "user": "5c6db0b4d37f300d1fed14ea",
+                    "date": "2019-02-26T14:07:25.029Z",
+                    "value": null,
+                    "action": "remove"
+                },
+                {
+                    "user": "5c6db0b4d37f300d1fed14ea",
+                    "date": "2019-02-26T14:07:26.631Z",
+                    "value": "black",
+                    "action": "modify"
+                }
+            ]
+        },
+        {
+            "id": "5bd14b4bd71ef20014e4b327",
+            "string": "observation",
+            "updates": [
+                {
+                    "user": "5c6db0b4d37f300d1fed14ea",
+                    "date": "2019-02-26T14:07:29.037Z",
+                    "value": "selected",
+                    "action": "create"
+                },
+                {
+                    "user": "5c6db0b4d37f300d1fed14ea",
+                    "date": "2019-02-26T14:07:31.707Z",
+                    "value": "no_selected",
+                    "action": "modify"
+                },
+                {
+                    "user": "5c6db0b4d37f300d1fed14ea",
+                    "date": "2019-02-26T14:07:33.144Z",
+                    "value": null,
+                    "action": "remove"
+                },
+                {
+                    "user": "5c6db0b4d37f300d1fed14ea",
+                    "date": "2019-02-26T14:07:34.698Z",
+                    "value": "observation",
+                    "action": "modify"
+                }
+            ]
+        },
+        {
+            "id": "5807afe331f55d0010aaffe6",
+            "number": null,
+            "updates": [
+                {
+                    "user": "5c6db0b4d37f300d1fed14ea",
+                    "date": "2019-02-26T14:07:36.125Z",
+                    "value": 90,
+                    "action": "create"
+                },
+                {
+                    "user": "5c6db0b4d37f300d1fed14ea",
+                    "date": "2019-02-26T14:07:37.666Z",
+                    "value": 97,
+                    "action": "modify"
+                },
+                {
+                    "user": "5c6db0b4d37f300d1fed14ea",
+                    "date": "2019-02-26T14:07:42.158Z",
+                    "value": null,
+                    "action": "remove"
+                }
+            ]
+        }
+    ]
+}
+
+// backup attribute color_racimo
+
+{ 
+    "_id" : ObjectId("585185360cb9af0011197935"), 
+    "type" : "attribute", 
+    "name" : "color_racimo", 
+    "attributes" : [
+        {
+            "id" : "datatype", 
+            "string" : "string"
+        }, 
+        {
+            "id" : "formtype", 
+            "string" : "select-img"
+        }, 
+        {
+            "id" : "description", 
+            "string" : "Color del racimo"
+        }, 
+        {
+            "id" : "input", 
+            "reference" : ObjectId("57fe942a45be360010073dbc")
+        }, 
+        {
+            "id" : "keys", 
+            "listOfObj" : [
+                {
+                    "string" : "string", 
+                    "id" : "label"
+                }, 
+                {
+                    "string" : "string", 
+                    "id" : "shortName"
+                }, 
+                {
+                    "string" : "listOfObj", 
+                    "id" : "options"
+                }, 
+                {
+                    "string" : "string", 
+                    "id" : "formType"
+                }
+            ], 
+            "list" : [
+
+            ]
+        }, 
+        {
+            "id" : "label", 
+            "string" : "Color de racimo", 
+            "list" : [
+
+            ]
+        }, 
+        {
+            "id" : "shortName", 
+            "string" : "color", 
+            "list" : [
+
+            ]
+        }, 
+        {
+            "id" : "options", 
+            "listOfObj" : [
+                {
+                    "url" : "https://s3.amazonaws.com/vinetracker-images/black.png", 
+                    "string" : "Racimo color negro", 
+                    "id" : "black"
+                }, 
+                {
+                    "url" : "https://s3.amazonaws.com/vinetracker-images/dark_pink.png", 
+                    "string" : "Racimo color rosado oscuro", 
+                    "id" : "dark_pink"
+                }, 
+                {
+                    "url" : "https://s3.amazonaws.com/vinetracker-images/pink.png", 
+                    "string" : "Racimo color rosado", 
+                    "id" : "pink"
+                }, 
+                {
+                    "url" : "https://s3.amazonaws.com/vinetracker-images/red.png", 
+                    "string" : "Racimo color rojo", 
+                    "id" : "red"
+                }, 
+                {
+                    "url" : "https://s3.amazonaws.com/vinetracker-images/amber.png", 
+                    "string" : "Racimo color ambar", 
+                    "id" : "amber"
+                }, 
+                {
+                    "url" : "https://s3.amazonaws.com/vinetracker-images/green.png", 
+                    "string" : "Racimo color verde", 
+                    "id" : "green"
+                }
+            ]
+        }, 
+        {
+            "id" : "optionImages", 
+            "listOfObj" : [
+                {
+                    "string" : "https://s3.amazonaws.com/vinetracker-images/black.png", 
+                    "id" : "black"
+                }, 
+                {
+                    "string" : "https://s3.amazonaws.com/vinetracker-images/dark_pink.png", 
+                    "id" : "dark_pink"
+                }, 
+                {
+                    "string" : "https://s3.amazonaws.com/vinetracker-images/pink.png", 
+                    "id" : "pink"
+                }, 
+                {
+                    "string" : "https://s3.amazonaws.com/vinetracker-images/red.png", 
+                    "id" : "red"
+                }, 
+                {
+                    "string" : "https://s3.amazonaws.com/vinetracker-images/amber.png", 
+                    "id" : "amber"
+                }, 
+                {
+                    "string" : "https://s3.amazonaws.com/vinetracker-images/green.png", 
+                    "id" : "green"
+                }
+            ]
+        }, 
+        {
+            "id" : "formType", 
+            "string" : "imageList"
+        }
+    ], 
+    "updated" : [
+        {
+            "user" : ObjectId("5792659bc4e0730f00417cbb"), 
+            "date" : "2017-06-22T15:30:25.484Z"
+        }
+    ], 
+    "created" : ISODate("2016-12-14T17:45:26.805+0000")
+}
