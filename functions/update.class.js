@@ -205,10 +205,9 @@ class UpdateAttribute {
         if (this.options.remove) { return this.removeAttributeEntity(); }
 
         // checking if the value is an available option
-        const options = this.getAttr(this.attributeSchema.attributes, 'options', 'listOfObj');
+        const options = this.getAttr(this.attributeSchema.attributes, 'options', 'value');
         if (!Array.isArray(options)) { throw { error: `The attribute ${this.attributeSchema._id.toString()} don't have the option's variable or is not an array`, message: `Method: attributeSelectEntity(), stage: checking if the value is an available option ` }; }
         if (options.map(x => x.id).indexOf(this.value) === -1) {
-            console.log('options is not an array')
             throw { error: `The attribute ${this.attributeSchema._id.toString()} don't have the option "${this.value}" in the list. Options available ${JSON.stringify(options.map(x => x.id))}`, message: `Method: attributeSelectEntity(), stage: checking if the value is an available option ` };
         }
         // on create
@@ -221,8 +220,8 @@ class UpdateAttribute {
         // checking if min max range is set
         let min, max;
         try {
-            min = this.attributeSchema.attributes.find(x => x.id === 'minimum')['number'];
-            max = this.attributeSchema.attributes.find(x => x.id === 'maximum')['number'];
+            min = this.attributeSchema.attributes.find(x => x.id === 'minimum')['value'];
+            max = this.attributeSchema.attributes.find(x => x.id === 'maximum')['value'];
         } catch (error) {
             throw { error: `Can't set min or max from ${this.attributeSchema._id.toString()} schema`, message: `Method: attrNumberRangeEntity, stage: checking if min max range is set` }
         }

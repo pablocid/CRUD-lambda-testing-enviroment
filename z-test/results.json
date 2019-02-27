@@ -6,39 +6,78 @@
         "name": "resetting the entity schema"
     },
     {
-        "name": "resetting the \"color_racimo\" attribute schema"
+        "name": "resetting the \"position\" attribute schema"
     },
     {
-        "name": "color create",
+        "name": "position create",
         "error": "Error: the attribute is not part of the entity schema",
         "message": "Method: static async build, stage: checking if the attribute is part of the schema",
         "from": "UpdateAttribute.build"
     },
     {
-        "name": "pushing color attributes in schema"
+        "name": "pushing position attributes in schema"
     },
     {
-        "name": "color create",
+        "name": "position create",
         "error": "The undefined data type doesn't exist.",
         "message": "Method: constructor, stage: checking allow data type",
         "from": "UpdateAttribute.build"
     },
     {
-        "name": "setting datatype in \"color_racimo\" attribute schema"
+        "name": "setting datatype in \"position\" attribute schema"
     },
     {
-        "name": "color create",
+        "name": "position create",
         "error": "The form type doesn' exist",
         "message": "Method: constructor, stage: checking the formtype",
         "from": "UpdateAttribute.build"
     },
     {
-        "name": "setting formtype in \"color_racimo\" attribute schema"
+        "name": "setting formtype in \"position\" attribute schema"
     },
     {
-        "name": "color create",
-        "error": "The attribute 585185360cb9af0011197935 don't have the option's variable or is not an array",
-        "message": "Method: attributeSelectEntity(), stage: checking if the value is an available option ",
+        "name": "position create",
+        "error": "Can't set min or max from 5807afe331f55d0010aaffe6 schema",
+        "message": "Method: attrNumberRangeEntity, stage: checking if min max range is set",
         "from": "updater.make"
+    },
+    {
+        "name": "setting min in \"position\" attribute schema"
+    },
+    {
+        "name": "setting min in \"position\" attribute schema"
+    },
+    {
+        "name": "position create",
+        "matchedCount": 1,
+        "modifiedCount": 1
+    },
+    {
+        "name": "position greater than max",
+        "error": "The value 190 is out of range (0-100)",
+        "message": "Method: attrNumberRangeEntity, stage: validate range min-max",
+        "from": "updater.make"
+    },
+    {
+        "name": "position smaller than min",
+        "error": "The value -10 is out of range (0-100)",
+        "message": "Method: attrNumberRangeEntity, stage: validate range min-max",
+        "from": "updater.make"
+    },
+    {
+        "name": "position modify",
+        "matchedCount": 1,
+        "modifiedCount": 1
+    },
+    {
+        "name": "position NaN",
+        "error": "value is not a number",
+        "message": "Method: constructor, stage: checking the data type",
+        "from": "UpdateAttribute.build"
+    },
+    {
+        "name": "position delete",
+        "matchedCount": 1,
+        "modifiedCount": 1
     }
 ]
