@@ -2,12 +2,16 @@ const { auth, db, client } = require('../functions/stitch');
 const { UpdateAttribute } = require('../functions/update.class');
 const { ObjectId } = require('bson');
 const { writeFileSync } = require('fs');
-const { resetingTestEvent, selectTestEvent, numberRangeTestEvent } = require('./test-events');
+const { resetingTestEvent, selectTestEvent, numberRangeTestEvent, textareaTestEvent, dataRangeTestEvent, multichoiceTestEvent, listTestEvent } = require('./test-events');
 const events = [
     ...resetingTestEvent,
     // ...selectTestEvent,
-    ...numberRangeTestEvent
-]
+    // ...numberRangeTestEvent,
+    // ...textareaTestEvent,
+    // ...dataRangeTestEvent,
+    // ...multichoiceTestEvent
+    ...listTestEvent
+];
 
 async function testing(event, db) {
     try { await auth(); }

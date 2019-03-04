@@ -2,29 +2,44 @@
     "_id": "57a8d8deef44961377521c86",
     "schm": "57a4e02ec830e2bdff1a1608",
     "created": "2016-08-06T22:04:12.762Z",
-    "updated": "2019-02-27T20:51:57.224Z",
+    "updated": "2019-03-04T21:56:02.802Z",
     "attributes": [
         {
-            "id": "5807afe331f55d0010aaffe6",
-            "number": null,
+            "id": "5c7d7ef25e5bfd015502fad2",
+            "value": [
+                {
+                    "id": "3",
+                    "value": "estás"
+                },
+                {
+                    "id": "1",
+                    "value": "hola"
+                },
+                {
+                    "id": "2",
+                    "value": "como"
+                }
+            ],
             "updates": [
                 {
                     "user": "5c6db0b4d37f300d1fed14ea",
-                    "date": "2019-02-27T20:51:51.829Z",
-                    "value": 90,
+                    "date": "2019-03-04T21:55:52.666Z",
                     "action": "create"
                 },
                 {
                     "user": "5c6db0b4d37f300d1fed14ea",
-                    "date": "2019-02-27T20:51:54.976Z",
-                    "value": 50,
-                    "action": "modify"
+                    "date": "2019-03-04T21:55:55.737Z",
+                    "action": "push"
                 },
                 {
                     "user": "5c6db0b4d37f300d1fed14ea",
-                    "date": "2019-02-27T20:51:57.224Z",
-                    "value": null,
-                    "action": "remove"
+                    "date": "2019-03-04T21:55:59.669Z",
+                    "action": "push"
+                },
+                {
+                    "user": "5c6db0b4d37f300d1fed14ea",
+                    "date": "2019-03-04T21:56:02.802Z",
+                    "action": "push"
                 }
             ]
         }
