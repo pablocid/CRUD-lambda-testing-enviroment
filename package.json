@@ -12,7 +12,7 @@
   "dependencies": {
     "bson": "^4.0.1",
     "googleapis": "^34.0.0",
-    "mongodb": "^3.1.10",
+    "mongodb": "^3.1.13",
     "mongodb-stitch-server-sdk": "^4.1.2"
   }
 }
